@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  </head>
+  <body>
+    <main class="container">
+      <div class="row">
+        <h1 class="col-12">Hello, world!</h1>
+    <div class="col-12 mb-3">
+      <label for="exampleSearch" class="form-label">Search</label>
+      <input type="search" class="form-control mb-3" id="exampleSearch">
+      <div class="" id="search-results">
+      </div>
+    </div>
+  </div>
+  </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script type="module" async crossorigin>
+      import { create, search, insert, insertBatch } from "https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js";
+      import { stemmer } from "https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js"; // For internationalization only
+
+      async function fetchJson(url) {
+        const response = await fetch(url);
+
+        if (response.status == 200) {
+          const json = await response.json();
+          return json;
+        }
+
+        throw new Error(response.status);
+      }
+
+      const db = await create({
+        schema: {
+          title: "string",
+          content: "string",
+          url: "string",
+          /* body: "string",
+          uri: "string",
+          meta: {
+            date: "string",
+            tags: "string"
+          }*/
+        },
+        defaultLanguage: "french",
+        components: {
+          tokenizer: {
+            stemmingFn: stemmer,
+          }
+        }
+      });
+
+      const searchIndex = await fetchJson('/index2.json').catch(console.log());
+      const newData = await insertBatch(db, searchIndex);
+      const searchResult = await search(db, {
+        term: "vitamine",
+        properties: "*"
+      });
+
+      const searchElem = document.getElementById('exampleSearch');
+      // searchElem.addEventListener('keyup', test);
+
+      // Print Lyra result object
+      let searchList = "";
+      const searchContainer = document.getElementById('search-results');
+      if (searchResult.count > 0){
+        [...searchResult.hits].forEach(item => {
+          searchList += `<a href="${item.document.url}"><div class="card card-body card-title">${item.document.title}</div></a>`
+        });
+        searchContainer.innerHTML = searchList;
+      } else { console.log('no results') }
+    </script>
+  </body>
+</html>
