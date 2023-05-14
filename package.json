@@ -1,0 +1,22 @@
+{
+  "name": "hugo-lyra-search",
+  "version": "0.0.1",
+  "description": "Tutorial to integrate Lyra search with a Hugo static site",
+  "scripts": {
+    "server": "hugo server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djibe/hugo-lyra-search.git"
+  },
+  "keywords": [
+    "hugo",
+    "lyra"
+  ],
+  "author": "djibe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/djibe/hugo-lyra-search/issues"
+  },
+  "homepage": "https://github.com/djibe/hugo-lyra-search#readme"
+}
