@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/djibe/hugo-lyra-search/issues"
   },
-  "homepage": "https://github.com/djibe/hugo-lyra-search#readme"
+  "homepage": "https://github.com/djibe/hugo-lyra-search#readme",
+  "devDependencies": {
+    "hugo-extended": "^0.111.3"
+  }
 }
