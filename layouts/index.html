@@ -10,16 +10,15 @@
 <body>
 <main class="container">
   <div class="row">
-    <h1 class="col-12">Hello, world!</h1>
+    <h1 class="col-12">Hugo with Lyra Search demo</h1>
     <div class="col-12 mb-3">
       <label for="search-input" class="form-label">Search</label>
       <input type="search" class="form-control mb-3" id="search-input">
-      <div id="search-results"></div>
+      <div class="list-group" id="search-results"></div>
     </div>
   </div>
 </main>
 <script type="module" async crossorigin>
-  import 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js';
   import {create, search, insertBatch} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js';
   import {stemmer} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js';
 
@@ -44,12 +43,12 @@
   const searchResults = document.getElementById('search-results');
 
   const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('keyup', query);
+  searchInput.addEventListener('keydown', query);
 
   async function query() {
     searchResults.innerHTML = (await search(searchEngine, {term: searchInput.value, properties: '*'}))
       .hits
-      .map(i => `<a href="${i.document.url}"><div class="card card-body card-title">${i.document.title}</div></a>`)
+      .map(i => `<a href="${i.document.url}" class="list-group-item list-group-item-action">${i.document.title}</a>`)
       .join('')
   }
 </script>
