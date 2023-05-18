@@ -8,7 +8,7 @@ A [Lyra search](https://docs.lyrasearch.io/) implementation for [Hugo](https://g
 
 We use Hugo's fast file generation to generate our index in JSON format.
 
-In the `layouts` folder, create a `index.json` file.
+In the `layouts` folder, create an `index.json` file.
 
 ```html
 [ {{- $i := 0 -}}
@@ -27,7 +27,7 @@ In you `config.toml`, add a `[outputs]` section (or edit it like this) to genera
 
 ```toml
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "JSON"]
 ```
 
 ## 2. Import Lyra in your footer
@@ -36,50 +36,44 @@ Import *Lyra* before your `body` closing tag.
 
 ```html
 <script type="module" async crossorigin>
-  import { create, search, insert, insertBatch } from "https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js";
-  import { stemmer } from "https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js"; // For internationalization only
+  import {create, search, insertBatch} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js';
+  import {stemmer} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js';
+```
 
-  async function fetchJson(url) {
-    const response = await fetch(url);
+Now add this code within the module:
 
-    if (response.status == 200) {
-      const json = await response.json();
-      return json;
-    }
+```js
+  const indexResponse = await fetch('/index.json')
+  const index = await indexResponse.json();
 
-    throw new Error(response.status);
-  }
-
-  const db = await create({
+  const searchEngine = await create({
     schema: {
-      title: "string",
-      body: "string",
-      uri: "string",
-      meta: {
-        date: "string",
-        tags: "string"
-      }
+      title: 'string',
+      content: 'string',
+      url: 'string'
     },
-    defaultLanguage: "french",
+    defaultLanguage: 'french',
     components: {
       tokenizer: {
         stemmingFn: stemmer,
       }
     }
   });
+  await insertBatch(searchEngine, index);
 
-  const searchIndex = await fetchJson('/index.json').catch(alert);;
-  const newData = await insertBatch(db, searchIndex);
-  const searchResult = await search(db, {
-    term: "2022",
-    properties: "*"
-  });
-  // Print Lyra result object
-  let searchList = "";
-  if (searchResult.count > 0){
-    [...searchResult.hits].forEach(item => {
-      searchList += `Title: ${item.document.title}\nAuthor: ${item.document.uri}`
-    });
-  } else { console.log('no results') }
-</script>
+  const searchResults = document.getElementById('search-results');
+
+  const searchInput = document.getElementById('search-input');
+  searchInput.addEventListener('keydown', query);
+
+  async function query() {
+    searchResults.innerHTML = (await search(searchEngine, {term: searchInput.value, properties: '*'}))
+      .hits
+      .map(i => `<a href="${i.document.url}" class="list-group-item list-group-item-action">${i.document.title}</a>`)
+      .join('')
+  }
 ```
+
+Enjoy.
+
+Thank you @mickaeltr !

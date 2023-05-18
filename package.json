@@ -1,6 +1,6 @@
 {
   "name": "hugo-lyra-search",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tutorial to integrate Lyra search with a Hugo static site",
   "scripts": {
     "server": "hugo server"
