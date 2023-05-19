@@ -1,8 +1,6 @@
-# hugo-lyra-search
+# Hugo Lyra search
 
 A [Lyra search](https://docs.lyrasearch.io/) implementation for [Hugo](https://gohugo.io/).
-
-**Warning.** This is Work In Progress
 
 ## 1. Create the database layout
 
@@ -23,7 +21,7 @@ In the `layouts` folder, create an `index.json` file.
 
 Now tell Hugo to generate the `index.json` from this template.
 
-In you `config.toml`, add a `[outputs]` section (or edit it like this) to generate `index.html` (homepage), `index.xml` (RSS feed) and our `index.json` (search index).
+In you `config.toml`, add a `[outputs]` section (or edit it like this) to generate `index.html` (homepage) and our `index.json` (search index).
 
 ```toml
 [outputs]
@@ -38,6 +36,7 @@ Import *Lyra* before your `body` closing tag.
 <script type="module" async crossorigin>
   import {create, search, insertBatch} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js';
   import {stemmer} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js';
+</script>
 ```
 
 Now add this code within the module:
