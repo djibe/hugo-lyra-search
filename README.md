@@ -13,7 +13,7 @@ In the `layouts` folder, create an `index.json` file.
   {{- range where .Site.RegularPages "Section" "ne" "" -}}
      {{- if not .Params.noSearch -}}
         {{- if gt $i 0 }},{{ end -}}
-        {"title":{{ .Title | jsonify }},"body": {{ .Plain | htmlUnescape | chomp | jsonify }},"uri":"{{ .RelPermalink }}","meta":{"date": "{{ .Date.Format "2006-01-02" }}","synonyms": {{ .Params.Synonyms | jsonify }},"specialites": {{ .Params.specialites | jsonify }},"annees": "{{ .Params.annees }}","sources": {{ .Params.sources | jsonify }},"tags": [{{- $t := 0 }}{{- range .Param "tags" -}}{{ if gt $t 0 }},{{ end }}{{ . | jsonify }}{{ $t = add $t 1 }}{{ end -}}]}}
+        {"title":{{ .Title | jsonify }},"body": {{ .Plain | htmlUnescape | chomp | jsonify }},"url":"{{ .RelPermalink }}","meta":{"date": "{{ .Date.Format "2006-01-02" }}","synonyms": {{ .Params.Synonyms | jsonify }},"specialites": {{ .Params.specialites | jsonify }},"annees": "{{ .Params.annees }}","sources": {{ .Params.sources | jsonify }},"tags": [{{- $t := 0 }}{{- range .Param "tags" -}}{{ if gt $t 0 }},{{ end }}{{ . | jsonify }}{{ $t = add $t 1 }}{{ end -}}]}}
         {{- $i = add $i 1 -}}
      {{- end -}}
   {{- end -}} ]
