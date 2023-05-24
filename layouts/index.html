@@ -40,13 +40,12 @@
   });
   await insertBatch(searchEngine, index);
 
-  const searchResults = document.getElementById('search-results');
-
   const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('keydown', query);
+  ['change', 'cut', 'input', 'paste', 'search'].forEach(type => searchInput.addEventListener(type, query));
 
-  async function query() {
-    searchResults.innerHTML = (await search(searchEngine, {term: searchInput.value, properties: '*'}))
+  async function query(event) {
+    const searchResponse = await search(searchEngine, {term: event.target.value, properties: '*'});
+    document.getElementById('search-results').innerHTML = searchResponse
       .hits
       .map(i => `<a href="${i.document.url}" class="list-group-item list-group-item-action">${i.document.title}</a>`)
       .join('')
