@@ -34,16 +34,15 @@ Import *Lyra* before your `body` closing tag.
 
 ```html
 <script type="module" async crossorigin>
-  import {create, search, insertBatch} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js';
-  import {stemmer} from 'https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js';
-</script>
-```
-
-Now add this code within the module:
-
-```js
-  const indexResponse = await fetch('/index.json')
-  const index = await indexResponse.json();
+  const [
+    {create, search, insertBatch},
+    {stemmer},
+    index
+  ] = await Promise.all([
+    import('https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/index.js'),
+    import('https://cdn.jsdelivr.net/npm/@lyrasearch/lyra@0.4.12/dist/stemmer/fr.min.js'),
+    import('/index2.json', {assert: {type: 'json'}})
+  ]);
 
   const searchEngine = await create({
     schema: {
@@ -58,11 +57,11 @@ Now add this code within the module:
       }
     }
   });
-  await insertBatch(searchEngine, index);
+  await insertBatch(searchEngine, index.default);
 
   const searchInput = document.getElementById('search-input');
   ['change', 'cut', 'input', 'paste', 'search'].forEach(type => searchInput.addEventListener(type, query));
-  
+
   async function query(event) {
     const searchResponse = await search(searchEngine, {term: event.target.value, properties: '*'});
     document.getElementById('search-results').innerHTML = searchResponse
@@ -70,6 +69,7 @@ Now add this code within the module:
       .map(i => `<a href="${i.document.url}" class="list-group-item list-group-item-action">${i.document.title}</a>`)
       .join('')
   }
+</script>
 ```
 
 Enjoy.
