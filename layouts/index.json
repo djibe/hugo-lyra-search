@@ -1,0 +1,8 @@
+[ {{- $i := 0 -}}
+  {{- range where .Site.RegularPages "Section" "ne" "" -}}
+     {{- if not .Params.noSearch -}}
+        {{- if gt $i 0 }},{{ end -}}
+        {"title":{{ .Title | jsonify }},"body": {{ .Content | plainify | htmlUnescape | chomp | jsonify }},"url":"{{ .RelPermalink | safeURL }}","meta":{"date": "{{ .Date.Format "2006-01-02" }}","synonyms": {{ .Params.Synonyms | jsonify }},"specialites": {{ .Params.specialites | jsonify }},"annees": "{{ .Params.annees }}","sources": {{ .Params.sources | jsonify }},"tags": [{{- $t := 0 }}{{- range .Param "tags" -}}{{ if gt $t 0 }},{{ end }}{{ . | jsonify }}{{ $t = add $t 1 }}{{ end -}}]}}
+        {{- $i = add $i 1 -}}
+     {{- end -}}
+  {{- end -}} ]

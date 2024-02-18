@@ -1,0 +1,6 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = 'My New Hugo Site with Lyra search'
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]

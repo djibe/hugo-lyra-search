@@ -1,0 +1,10 @@
+.vscode/
+dev/
+node_modules/
+public/
+resources/
+.hugo_build.lock
+*.log
+
+# Local Netlify folder
+.netlify
